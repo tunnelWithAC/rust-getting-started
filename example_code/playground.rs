@@ -10,9 +10,12 @@ trait Transform {
     fn call(&self) -> &str;
 }
 
+// https://doc.rust-lang.org/error_codes/E0072.html
 struct Transf {
     x: f64,
     y: f64,
+    my_array: [Box<Transf>; 1],  // An array of 5 i32 elements // use vec for dynamic size
+
 }
 
 impl Transf {
@@ -21,16 +24,16 @@ impl Transf {
     }
 }
 
-impl ops::Shr<Transf> for Transf {
-    type Output = Transf;
+// impl ops::Shr<Transf> for Transf {
+//     type Output = Transf;
 
-    fn shr(self, _rhs: Transf) -> Transf {
-        println!("> Foo.add(Bar) was called with {} {}", self.x, self.y);
+//     fn shr(self, _rhs: Transf) -> Transf {
+//         println!("> Foo.add(Bar) was called with {} {}", self.x, self.y);
 
 
-        Transf { x: 0.0, y: 0.0 }
-    }
-}
+//         Transf { x: 0.0, y: 0.0, my_array: [1], }
+//     }
+// }
 
 impl<T> Expand for T where T: Transform {
     fn expand(&self, x: u64, y: u64) {
