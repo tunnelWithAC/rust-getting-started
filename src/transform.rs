@@ -7,7 +7,7 @@ use std::fmt::Debug;
 
 struct Transform<'a> {
     // value: T,
-    children: Vec<Box<&'a Transform<'a>>>,
+    children: Vec<Box< Transform<'a>>>,
 }
 
 impl<'a> Transform<'a> {
@@ -28,10 +28,10 @@ impl<'a> Transform<'a> {
 // expected signature `fn(&mut transform::Transform<'_>, &mut transform::Transform<'_>) -> transform::Transform<'_>`
 // ___found signature `fn(&mut transform::Transform<'_>, &'a transform::Transform<'_>) -> &'a transform::Transform<'_>`
 
-impl<'a> ops::Shr<&'a Transform<'a>> for &mut Transform<'a> {
+impl<'a> ops::Shr<Transform<'a>> for &mut Transform<'a> {
     type Output = &'a Transform<'a>;
 
-    fn shr(mut self, mut other: &Transform<'a>) -> &'a Transform<'a> {
+    fn shr(mut self, mut other: Transform<'a>) -> &'a Transform<'a> {
         self.children.push(Box::new(other));
         other
         // other // Return a reference to the modified self
@@ -90,7 +90,8 @@ mod tests {
         let transform_two = Transform { children: vec![] };
 
         // transform.
-        transform.add(&transform_two);
+        // transform.add(&transform_two);
+        transform >> transform_two;
 
         // let mut my_struct = MyStruct { children: vec![] };
         // let added_value = my_struct.add(5);
