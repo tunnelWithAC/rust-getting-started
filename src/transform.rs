@@ -1,5 +1,8 @@
 // mod transform;
-
+use std::ops;
+// use std::rc::Rc;
+// use std::any::Any;
+// use std::fmt;
 use std::fmt::Debug;
 
 struct Transform<'a> {
@@ -19,48 +22,23 @@ impl<'a> Transform<'a> {
     }
 }
 
-// impl Transform {
-//     pub(crate) fn add_child(&mut self, child: Transform) -> Transform {
-//         self.children.push(Box::new(&child));
-//         child
-//     }
-// }
+// `fn(transform::Transform<'_>, transform::Transform<'_>) -> transform::Transform<'a>`
+// `fn(&mut transform::Transform<'_>, &'a transform::Transform<'_>) -> &transform::Transform<'_>`
+
+// expected signature `fn(&mut transform::Transform<'_>, &mut transform::Transform<'_>) -> transform::Transform<'_>`
+// ___found signature `fn(&mut transform::Transform<'_>, &'a transform::Transform<'_>) -> &'a transform::Transform<'_>`
+
+impl<'a> ops::Shr<&'a Transform<'a>> for &mut Transform<'a> {
+    type Output = &'a Transform<'a>;
+
+    fn shr(mut self, mut other: &Transform<'a>) -> &'a Transform<'a> {
+        self.children.push(Box::new(other));
+        other
+        // other // Return a reference to the modified self
+    }
+}
 
 
-// fn add_child(parent: &mut Transform, child: Transform) {
-//     parent.children.push(Box::new(child));
-// }
-// impl Transform {
-//     fn add_child(parent: &mut Transform, child: Transform) -> Transform {
-//         // parent.children.push(Box::new(child));
-//         let o = *child;
-//         parent.children.push(*o);
-//         child
-//     }
-//     // fn add(&mut self, other: Transform) -> Transform {
-//     //     let o = &other;
-//     //     // self.children.push(o);
-//     //     self.children.push(&other); // Extend with the old array
-//     //
-//     //     other
-//     // }
-// }
-// use std::ops;
-// use std::rc::Rc;
-//
-// use std::any::Any;
-// use std::fmt;
-//
-// pub struct Transform {
-//     children: Box<Vec<Transform>>
-// }
-//
-
-//
-// // struct Transform<'a> {
-// //     children: &'a Vec<Transform<'a>>,
-// // }
-//
 //
 // // impl ops::Shr<Transform> for Transform {
 // //     type Output = ();
